@@ -1,0 +1,42 @@
+:root {
+  --page-bg: #f7f8fb;
+  --sidebar-bg: #f4f6f8;
+  --accent-blue: #0b66c3;
+}
+
+html, body { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
+body { background: var(--page-bg); }
+
+.app-shell { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 200px;
+  background: var(--sidebar-bg);
+  padding: 24px 20px;
+  box-shadow: 2px 0 8px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--accent-blue);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.logo-sub {
+  font-size: 13px;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.content-main { flex: 1; padding: 28px 36px; }
+.page-inner { max-width: 1000px; margin: 0 auto; }
+
+@media (max-width: 800px) {
+  .sidebar { display: none; }
+  .content-main { padding: 16px; }
+}

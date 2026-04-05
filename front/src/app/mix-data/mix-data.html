@@ -1,0 +1,75 @@
+<section class="report">
+  <div class="report-header">
+    <h1>Relatório Mix PI</h1>
+  </div>
+
+  <div class="table-wrap">
+    <div class="filter-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Data início</mat-label>
+        <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate">
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Hora início</mat-label>
+        <input matInput type="time" [(ngModel)]="startTime">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Data fim</mat-label>
+        <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate">
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Hora fim</mat-label>
+        <input matInput type="time" [(ngModel)]="endTime">
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="applyFilter()">Filtrar</button>
+      <button mat-button (click)="clearFilter()">Limpar</button>
+      <button mat-button (click)="load()">Atualizar</button>
+
+      <div class="export-inline">
+        <button mat-stroked-button [matMenuTriggerFor]="exportMenu">Exportar</button>
+        <mat-menu #exportMenu="matMenu">
+          <button mat-menu-item (click)="exportCSV()">Exportar CSV</button>
+          <button mat-menu-item (click)="exportXLSX()">Exportar XLSX</button>
+          <button mat-menu-item (click)="exportPDF()">Exportar PDF</button>
+        </mat-menu>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="loading">Carregando...</div>
+    <div *ngIf="errorMsg" class="error">Erro: {{ errorMsg }}</div>
+    <div *ngIf="!loading && data.length === 0 && !errorMsg" class="empty">Nenhum registro encontrado.</div>
+
+    <table *ngIf="!loading && data.length > 0">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Lote</th>
+          <th>Produto</th>
+          <th>Peso (kg)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of paginatedData">
+          <td>{{ row.timestamp | date:'dd/MM/yyyy - HH:mm:ss' }}</td>
+          <td>{{ row.lote }}</td>
+          <td>{{ row.produto }}</td>
+          <td>{{ row.peso }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="report-footer" *ngIf="data.length > 0">
+      <span class="page-info">Página {{ page + 1 }} de {{ totalPages }}</span>
+      <button mat-button (click)="prevPage()" [disabled]="page === 0">Anterior</button>
+      <button mat-button (click)="nextPage()" [disabled]="page === totalPages - 1">Próximo</button>
+    </div>
+  </div>
+</section>
