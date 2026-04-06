@@ -97,7 +97,7 @@ PESO_REGISTRADOR = 9102
 BIT_TRIGGER_REGISTRADOR = 9011
 BIT_TRIGGER_POSICAO = 15
 
-API_URL = "http://localhost:8080/api/mix/data"
+API_URL = "http://localhost:8080/api/pre-mix/data"
 POLL_INTERVAL = 1  # segundos entre cada verificação do bit
 
 
@@ -120,15 +120,15 @@ def ler_e_gravar(client):
 	}
 	print(payload)
 
-	# print("Enviando dados para o backend...")
-	# try:
-	# 	response = requests.post(API_URL, json=payload, timeout=5)
-	# 	if response.status_code == 201:
-	# 		print("Dados gravados com sucesso!")
-	# 	else:
-	# 		print(f"Erro ao gravar: HTTP {response.status_code} - {response.text}")
-	# except requests.exceptions.RequestException as e:
-	# 	print(f"Erro de conexão com o backend: {e}")
+	print("Enviando dados para o backend...")
+	try:
+		response = requests.post(API_URL, json=payload, timeout=5)
+		if response.status_code == 201:
+			print("Dados gravados com sucesso!")
+		else:
+			print(f"Erro ao gravar: HTTP {response.status_code} - {response.text}")
+	except requests.exceptions.RequestException as e:
+		print(f"Erro de conexão com o backend: {e}")
 
 
 def main():
@@ -143,7 +143,6 @@ def main():
 		while True:
 			print("Verificando bit de disparo...")
 			bit = read_bit(client, BIT_TRIGGER_REGISTRADOR, BIT_TRIGGER_POSICAO)
-			bit = 1  # TESTE
 			if bit == 1:
 				print("Bit de disparo detectado!")
 				ler_e_gravar(client)

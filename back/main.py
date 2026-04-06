@@ -35,6 +35,17 @@ class MixDataModel(Base):
     timestamp = Column(DateTime(timezone=True))
 
 
+class PreMixDataModel(Base):
+    __tablename__ = "pre_mix_data"
+
+    id        = Column(BigInteger, primary_key=True, autoincrement=True)
+    lote      = Column(Integer)
+    sequencia = Column(Integer)
+    produto   = Column(String(40))
+    peso      = Column(Float)
+    timestamp = Column(DateTime(timezone=True))
+
+
 Base.metadata.create_all(bind=engine)
 
 # ── App ───────────────────────────────────────────────────────────────────────
@@ -76,6 +87,25 @@ class MixDataOut(BaseModel):
     timestamp: Optional[datetime] = None
 
 
+class PreMixDataIn(BaseModel):
+    lote:      Optional[int]      = None
+    sequencia: Optional[int]      = None
+    produto:   Optional[str]      = None
+    peso:      Optional[float]    = None
+    timestamp: Optional[datetime] = None
+
+
+class PreMixDataOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id:        Optional[int]      = None
+    lote:      Optional[int]      = None
+    sequencia: Optional[int]      = None
+    produto:   Optional[str]      = None
+    peso:      Optional[float]    = None
+    timestamp: Optional[datetime] = None
+
+
 # ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.post("/api/mix/data", response_model=MixDataOut, status_code=201)
@@ -106,6 +136,42 @@ def list_mix(db: Session = Depends(get_db)):
 @app.get("/api/mix/data/{id}", response_model=MixDataOut)
 def get_mix(id: int, db: Session = Depends(get_db)):
     record = db.query(MixDataModel).filter(MixDataModel.id == id).first()
+    if not record:
+        raise HTTPException(status_code=404, detail="Not found")
+    return record
+
+
+# ── Pre-Mix Routes ────────────────────────────────────────────────────────────
+
+@app.post("/api/pre-mix/data", response_model=PreMixDataOut, status_code=201)
+def create_pre_mix(data: PreMixDataIn, response: Response, db: Session = Depends(get_db)):
+    record = PreMixDataModel(
+        lote=data.lote,
+        sequencia=data.sequencia,
+        produto=data.produto,
+        peso=data.peso,
+        timestamp=data.timestamp or datetime.now(timezone.utc),
+    )
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+    response.headers["Location"] = f"/api/pre-mix/data/{record.id}"
+    return record
+
+
+@app.get("/api/pre-mix/data", response_model=List[PreMixDataOut])
+def list_pre_mix(db: Session = Depends(get_db)):
+    return (
+        db.query(PreMixDataModel)
+        .order_by(PreMixDataModel.timestamp.desc())
+        .limit(1000)
+        .all()
+    )
+
+
+@app.get("/api/pre-mix/data/{id}", response_model=PreMixDataOut)
+def get_pre_mix(id: int, db: Session = Depends(get_db)):
+    record = db.query(PreMixDataModel).filter(PreMixDataModel.id == id).first()
     if not record:
         raise HTTPException(status_code=404, detail="Not found")
     return record
