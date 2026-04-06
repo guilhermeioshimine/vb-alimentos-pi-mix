@@ -25,8 +25,8 @@ class Base(DeclarativeBase):
 
 # ── ORM Model ─────────────────────────────────────────────────────────────────
 
-class ExtrusoraDataModel(Base):
-    __tablename__ = "extrusora_data"
+class MixDataModel(Base):
+    __tablename__ = "mix_data"
 
     id        = Column(BigInteger, primary_key=True, autoincrement=True)
     lote      = Column(Integer)
@@ -59,14 +59,14 @@ def get_db():
 
 # ── Pydantic Schemas ──────────────────────────────────────────────────────────
 
-class ExtrusoraDataIn(BaseModel):
+class MixDataIn(BaseModel):
     lote:      Optional[int]      = None
     produto:   Optional[str]      = None
     peso:      Optional[float]    = None
     timestamp: Optional[datetime] = None
 
 
-class ExtrusoraDataOut(BaseModel):
+class MixDataOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id:        Optional[int]      = None
@@ -78,9 +78,9 @@ class ExtrusoraDataOut(BaseModel):
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
-@app.post("/api/extrusora/data", response_model=ExtrusoraDataOut, status_code=201)
-def create_extrusora(data: ExtrusoraDataIn, response: Response, db: Session = Depends(get_db)):
-    record = ExtrusoraDataModel(
+@app.post("/api/mix/data", response_model=MixDataOut, status_code=201)
+def create_mix(data: MixDataIn, response: Response, db: Session = Depends(get_db)):
+    record = MixDataModel(
         lote=data.lote,
         produto=data.produto,
         peso=data.peso,
@@ -89,23 +89,23 @@ def create_extrusora(data: ExtrusoraDataIn, response: Response, db: Session = De
     db.add(record)
     db.commit()
     db.refresh(record)
-    response.headers["Location"] = f"/api/extrusora/data/{record.id}"
+    response.headers["Location"] = f"/api/mix/data/{record.id}"
     return record
 
 
-@app.get("/api/extrusora/data", response_model=List[ExtrusoraDataOut])
-def list_extrusora(db: Session = Depends(get_db)):
+@app.get("/api/mix/data", response_model=List[MixDataOut])
+def list_mix(db: Session = Depends(get_db)):
     return (
-        db.query(ExtrusoraDataModel)
-        .order_by(ExtrusoraDataModel.timestamp.desc())
+        db.query(MixDataModel)
+        .order_by(MixDataModel.timestamp.desc())
         .limit(1000)
         .all()
     )
 
 
-@app.get("/api/extrusora/data/{id}", response_model=ExtrusoraDataOut)
-def get_extrusora(id: int, db: Session = Depends(get_db)):
-    record = db.query(ExtrusoraDataModel).filter(ExtrusoraDataModel.id == id).first()
+@app.get("/api/mix/data/{id}", response_model=MixDataOut)
+def get_mix(id: int, db: Session = Depends(get_db)):
+    record = db.query(MixDataModel).filter(MixDataModel.id == id).first()
     if not record:
         raise HTTPException(status_code=404, detail="Not found")
     return record

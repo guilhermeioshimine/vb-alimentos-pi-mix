@@ -58,7 +58,7 @@ export class MixDataComponent implements OnInit {
   load() {
     this.loading = true;
     this.errorMsg = null;
-    this.http.get<MixData[]>('/api/extrusora/data')
+    this.http.get<MixData[]>('/api/mix/data')
       .pipe(finalize(() => { this.loading = false; this.cd.detectChanges(); }))
       .subscribe({
         next: (res) => {
