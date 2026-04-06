@@ -63,7 +63,7 @@ export class PreMixDataComponent implements OnInit {
       .pipe(finalize(() => { this.loading = false; this.cd.detectChanges(); }))
       .subscribe({
         next: (res) => {
-          this.allData = (res || []).slice().reverse();
+          this.allData = res || [];
           this.applyFilter();
           this.page = 0;
         },
