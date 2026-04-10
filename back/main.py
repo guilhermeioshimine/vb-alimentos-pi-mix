@@ -30,6 +30,7 @@ class MixDataModel(Base):
 
     id        = Column(BigInteger, primary_key=True, autoincrement=True)
     lote      = Column(Integer)
+    receita   = Column(String(80))
     produto   = Column(String(40))
     peso      = Column(Float)
     timestamp = Column(DateTime(timezone=True))
@@ -40,6 +41,7 @@ class PreMixDataModel(Base):
 
     id        = Column(BigInteger, primary_key=True, autoincrement=True)
     lote      = Column(Integer)
+    receita   = Column(String(80))
     sequencia = Column(Integer)
     produto   = Column(String(40))
     peso      = Column(Float)
@@ -72,6 +74,7 @@ def get_db():
 
 class MixDataIn(BaseModel):
     lote:      Optional[int]      = None
+    receita:   Optional[str]      = None
     produto:   Optional[str]      = None
     peso:      Optional[float]    = None
     timestamp: Optional[datetime] = None
@@ -82,6 +85,7 @@ class MixDataOut(BaseModel):
 
     id:        Optional[int]      = None
     lote:      Optional[int]      = None
+    receita:   Optional[str]      = None
     produto:   Optional[str]      = None
     peso:      Optional[float]    = None
     timestamp: Optional[datetime] = None
@@ -89,6 +93,7 @@ class MixDataOut(BaseModel):
 
 class PreMixDataIn(BaseModel):
     lote:      Optional[int]      = None
+    receita:   Optional[str]      = None
     sequencia: Optional[int]      = None
     produto:   Optional[str]      = None
     peso:      Optional[float]    = None
@@ -100,6 +105,7 @@ class PreMixDataOut(BaseModel):
 
     id:        Optional[int]      = None
     lote:      Optional[int]      = None
+    receita:   Optional[str]      = None
     sequencia: Optional[int]      = None
     produto:   Optional[str]      = None
     peso:      Optional[float]    = None
@@ -112,6 +118,7 @@ class PreMixDataOut(BaseModel):
 def create_mix(data: MixDataIn, response: Response, db: Session = Depends(get_db)):
     record = MixDataModel(
         lote=data.lote,
+        receita=data.receita,
         produto=data.produto,
         peso=data.peso,
         timestamp=data.timestamp or datetime.now(timezone.utc),
@@ -147,6 +154,7 @@ def get_mix(id: int, db: Session = Depends(get_db)):
 def create_pre_mix(data: PreMixDataIn, response: Response, db: Session = Depends(get_db)):
     record = PreMixDataModel(
         lote=data.lote,
+        receita=data.receita,
         sequencia=data.sequencia,
         produto=data.produto,
         peso=data.peso,

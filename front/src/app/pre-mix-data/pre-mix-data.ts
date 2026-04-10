@@ -17,6 +17,7 @@ import 'jspdf-autotable';
 interface PreMixData {
   id?: number;
   lote?: number;
+  receita?: string;
   sequencia?: number;
   produto?: string;
   peso?: number;
@@ -111,6 +112,7 @@ export class PreMixDataComponent implements OnInit {
   private getExportData() {
     return this.data.map(d => ({
       'Data': d.timestamp ? new Date(d.timestamp).toLocaleString('pt-BR') : '',
+      'Receita': d.receita ?? '',
       'Lote': d.lote ?? '',
       'Sequência': d.sequencia ?? '',
       'Produto': d.produto ?? '',

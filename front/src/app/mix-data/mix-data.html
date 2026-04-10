@@ -51,6 +51,7 @@
       <thead>
         <tr>
           <th>Data</th>
+          <th>Receita</th>
           <th>Lote</th>
           <th>Produto</th>
           <th>Peso (kg)</th>
@@ -59,6 +60,7 @@
       <tbody>
         <tr *ngFor="let row of paginatedData">
           <td>{{ row.timestamp | date:'dd/MM/yyyy - HH:mm:ss' }}</td>
+          <td>{{ row.receita }}</td>
           <td>{{ row.lote }}</td>
           <td>{{ row.produto }}</td>
           <td>{{ row.peso }}</td>

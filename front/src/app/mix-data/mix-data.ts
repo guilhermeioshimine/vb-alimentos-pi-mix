@@ -17,6 +17,7 @@ import 'jspdf-autotable';
 interface MixData {
   id?: number;
   lote?: number;
+  receita?: string;
   produto?: string;
   peso?: number;
   timestamp?: string;
@@ -110,6 +111,7 @@ export class MixDataComponent implements OnInit {
   private getExportData() {
     return this.data.map(d => ({
       'Data': d.timestamp ? new Date(d.timestamp).toLocaleString('pt-BR') : '',
+      'Receita': d.receita ?? '',
       'Lote': d.lote ?? '',
       'Produto': d.produto ?? '',
       'Peso (kg)': d.peso ?? '',
