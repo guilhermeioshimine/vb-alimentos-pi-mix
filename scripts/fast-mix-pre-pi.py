@@ -89,6 +89,7 @@ from pymodbus.client import ModbusTcpClient
 IP = "192.168.2.200"
 PORT = 502
 UNIT_ID = 1
+RECEITA_REGISTRADOR = 28310
 LOTE_REGISTRADOR = 9078
 SEQUENCIA_REGISTRADOR = 9080
 PRODUTO_REGISTRADOR = 9081
@@ -105,6 +106,7 @@ def ler_e_gravar(client):
 	print("Bit de disparo ativo. Lendo registradores...")
 
 	lote = read_dword(client, LOTE_REGISTRADOR)
+	receita = read_string(client, RECEITA_REGISTRADOR, 20)
 	sequencia = read_word(client, SEQUENCIA_REGISTRADOR)
 	produto = read_string(client, PRODUTO_REGISTRADOR, 20)
 	peso = read_decimal(client, PESO_REGISTRADOR, 2)
@@ -113,6 +115,7 @@ def ler_e_gravar(client):
 
 	payload = {
 		"lote": lote,
+		"receita": receita,
 		"sequencia": sequencia,
 		"produto": produto,
 		"peso": peso,
